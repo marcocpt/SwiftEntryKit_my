@@ -86,3 +86,14 @@ final public class EKTextField: UIView {
         textField.placeholder = content.placeholder
     }
 }
+
+internal extension EKTextField {
+    var textFieldDelegate: UITextFieldDelegate? {
+        get {
+            textField.delegate
+        }
+        set {
+            textField.delegate = newValue
+        }
+    }
+}
