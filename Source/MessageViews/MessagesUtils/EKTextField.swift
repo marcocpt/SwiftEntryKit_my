@@ -55,6 +55,7 @@ final public class EKTextField: UIView {
     
     private func setupTextField() {
         addSubview(textField)
+        textField.clearButtonMode = .always
         textField.textFieldContent = content
         textField.delegate = content.delegate
         textField.set(.height, of: EKTextField.totalHeight)
