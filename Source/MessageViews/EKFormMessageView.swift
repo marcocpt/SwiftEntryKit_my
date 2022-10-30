@@ -20,7 +20,9 @@ final public class EKFormMessageView: UIView {
     private var buttonBarView: EKButtonBarView!
     
     private let titleContent: EKProperty.LabelContent
-    
+
+    private var action: EKProperty.ButtonContent.Action?
+
     // MARK: Setup
     
     public init(with title: EKProperty.LabelContent,
@@ -43,11 +45,22 @@ final public class EKFormMessageView: UIView {
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+
+    public override var keyCommands: [UIKeyCommand]? {
+        let escape = UIKeyCommand(
+            input: UIKeyCommand.inputEscape,
+            modifierFlags: [],
+            action: #selector(inputEscape))
+        return [escape]
+    }
     
     private func setupTextFields(with textFieldsContent: [EKProperty.TextFieldContent]) {
         var textFieldIndex = 0
         textFieldViews = textFieldsContent.map { content -> EKTextField in
             let textField = EKTextField(with: content)
+            if textField.textFieldDelegate == nil {
+                textField.textFieldDelegate = self
+            }
             scrollView.addSubview(textField)
             textField.tag = textFieldIndex
             textFieldIndex += 1
@@ -90,6 +103,8 @@ final public class EKFormMessageView: UIView {
             self?.extractTextFieldsContent()
             action?()
         }
+        self.action = buttonContent.action
+
         let buttonsBarContent = EKProperty.ButtonBarContent(
             with: buttonContent,
             separatorColor: .clear,
@@ -126,5 +141,18 @@ final public class EKFormMessageView: UIView {
     // Tap Gesture
     @objc func tapGestureRecognized() {
         endEditing(true)
+    }
+}
+
+extension EKFormMessageView {
+    @objc func inputEscape() {
+        SwiftEntryKit.dismiss()
+    }
+}
+
+extension EKFormMessageView: UITextFieldDelegate {
+    public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        action?()
+        return true
     }
 }

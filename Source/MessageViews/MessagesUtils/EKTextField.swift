@@ -55,6 +55,7 @@ final public class EKTextField: UIView {
     
     private func setupTextField() {
         addSubview(textField)
+        textField.clearButtonMode = .always
         textField.textFieldContent = content
         textField.delegate = content.delegate
         textField.set(.height, of: EKTextField.totalHeight)
@@ -84,5 +85,16 @@ final public class EKTextField: UIView {
         imageView.tintColor = content.tintColor(for: traitCollection)
         textField.textColor = content.textStyle.color(for: traitCollection)
         textField.placeholder = content.placeholder
+    }
+}
+
+internal extension EKTextField {
+    var textFieldDelegate: UITextFieldDelegate? {
+        get {
+            textField.delegate
+        }
+        set {
+            textField.delegate = newValue
+        }
     }
 }
